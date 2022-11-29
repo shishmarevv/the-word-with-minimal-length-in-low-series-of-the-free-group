@@ -55,13 +55,14 @@ def create_x():
         counter += 1
         tstring = line.rstrip('\n')
         tstring = tstring.rstrip(' ')
+        tstring = tstring[3:]
         all.append(tstring.split(";"))
     result = []
-    resultline = ''
+    resultline = str(counter + 1) + '::'
     file.close()
     file = open("memory0.txt", 'a')
     filec = open('memory1.txt', 'a')
-    commutatorsline = ''
+    commutatorsline = str(counter + 1) + '::'
     for i in range(counter):
         j = counter - i - 1
         for el1 in all[i]:
@@ -90,41 +91,54 @@ def print_x(n):
     file.close()
 
 
+# Функция, сохраняющая все элементы минимальной длины в X_n
 def find_min_length_in_x(n):
     file = open("memory0.txt", 'r')
-    filec = open("memory1.txt", 'r')
-    xnline = file.readlines()[n - 1]
-    xnline = xnline.rstrip('\n')
-    comline = filec.readlines()[n - 1]
-    comline = comline.rstrip('\n')
-    xn = xnline.split(';')
-    comslice = comline.split(';')
+    file_com = open("memory1.txt", 'r')
+    xn_line = file.readlines()[n - 1]
+    xn_line = xn_line.rstrip('\n')
+    xn_line = xn_line[3:]
+    com_line = file_com.readlines()[n - 1]
+    com_line = com_line.rstrip('\n')
+    com_line = com_line[3:]
+    xn = xn_line.split(';')
+    com_slice = com_line.split(';')
     min_length = len(xn[0])
-    min_length_el = xn[0]
     i = 0
     min_index = 0
     for el in xn:
-        i += 1
         if len(el) < min_length:
             min_length = len(el)
-            min_length_el = el
             min_index = i
+        i += 1
+    file_min = open("memory2.txt", 'a')
+    save_line = '\n' + str(n) + str(min_length) + '::'
+    for i in range(len(xn)):
+        if len(xn[i]) == min_length:
+            save_line = save_line + xn[i] + "||" + com_slice[i] + ';'
+    save_line = save_line[:-1]
+    file_min.write(save_line)
     file.close()
-    print(min_length)
-    print(min_length_el)
-    print(comslice[min_index])
+    file_com.close()
+    file_min.close()
 
 
 def main():
     s = input()
     if s == 'create':
-        n = int(input())
+        n = int(input('Сколько еще элементов ряда нужно сгенерировать?'))
         for i in range(n):
             create_x()
     elif s == 'min':
-        find_min_length_in_x(int(input()))
+        find_min_length_in_x(int(input("Минимальная длина какого элемента?")))
     elif s == 'print':
         print_x(int(input()))
+    elif s == 'commute':
+        s1 = input("Первый коммутируемый")
+        s2 = input("Второй коммутируемый")
+        s3 = commute(s1, s2)
+        print(s3)
+        print(len(s3))
 
 
 starttime = time.time()
