@@ -81,6 +81,50 @@ def create_x():
     filec.close()
 
 
+def compete():
+    file1 = open("memory0.txt", 'r')
+    file2 = open("memory1.txt", 'r')
+    file3 = open("memory3.txt", 'a')
+    dict = {'a': 'a', 'b': 'b', 'ABab': '[a,b]', 'BAba': '[b,a]'}
+    period = []
+    words_list = []
+    counter = 0
+    for line in file1:
+        tstring = line.rstrip('\n')
+        period.append(counter)
+        tstring = tstring.replace(' ', '')
+        tstring = tstring[3:]
+        tlist = tstring.split(";")
+        for x in tlist:
+            words_list.append(x)
+            counter += 1
+    commutators_list = []
+    for line in file2:
+        tstring = line.rstrip('\n')
+        tstring = tstring.rstrip(' ')
+        tstring = tstring[3:]
+        tlist = tstring.split(";")
+        for x in tlist:
+            y = x.replace("[", "")
+            y = y.replace("]", '')
+            y = y.replace(" ", '')
+            y = y.split(",")
+            commutators_list.append(y)
+    for i in range(4, len(words_list)):
+        dict[words_list[i]] = '[' + dict[commutators_list[i][0]] + ',' + dict[commutators_list[i][1]] + ']'
+    result = ""
+    counter = 2
+    for i in range(len(words_list)):
+        result = result + dict[words_list[i]] + ";"
+        if i + 1 in period:
+            result = result[:-1] + '\n' + str(counter) + "::"
+            counter += 1
+    file3.write(result)
+    file3.close()
+    file2.close()
+    file1.close()
+
+
 # Функция, печатающая n-ый элемент ряда X
 def print_x(n):
     file = open("memory0.txt", 'r')
@@ -95,14 +139,19 @@ def print_x(n):
 def find_min_length_in_x(n):
     file = open("memory0.txt", 'r')
     file_com = open("memory1.txt", 'r')
+    file_com2 = open("memory3.txt", 'r')
     xn_line = file.readlines()[n - 1]
     xn_line = xn_line.rstrip('\n')
     xn_line = xn_line[3:]
     com_line = file_com.readlines()[n - 1]
     com_line = com_line.rstrip('\n')
     com_line = com_line[3:]
+    com2_line = file_com2.readlines()[n - 1]
+    com2_line = com2_line.rstrip('\n')
+    com2_line = com2_line[3:]
     xn = xn_line.split(';')
     com_slice = com_line.split(';')
+    com2_slice = com2_line.split(';')
     min_length = len(xn[0])
     i = 0
     min_index = 0
@@ -115,7 +164,7 @@ def find_min_length_in_x(n):
     save_line = '\n' + str(n) + str(min_length) + '::'
     for i in range(len(xn)):
         if len(xn[i]) == min_length:
-            save_line = save_line + xn[i] + "||" + com_slice[i] + ';'
+            save_line = save_line + xn[i] + "||" + com_slice[i] + '||' + com2_slice[i] + ';'
     save_line = save_line[:-1]
     file_min.write(save_line)
     file.close()
@@ -139,6 +188,11 @@ def main():
         s3 = commute(s1, s2)
         print(s3)
         print(len(s3))
+    elif s == 'comp':
+        compete()
+        print("competed")
+    else:
+        print("XD")
 
 
 starttime = time.time()
