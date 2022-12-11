@@ -60,6 +60,7 @@ def create_x():
     result = []
     resultline = str(counter + 1) + '::'
     file.close()
+    print("readed")
     file = open("memory0.txt", 'a')
     filec = open('memory1.txt', 'a')
     commutatorsline = str(counter + 1) + '::'
@@ -73,6 +74,8 @@ def create_x():
                         commutatorsline = commutatorsline + '[' + el1 + ', ' + el2 + '];'
                         result.append(temp)
                         resultline = resultline + temp + ';'
+        print(i, j)
+    print("commuted")
     resultline = resultline[:-1]
     commutatorsline = commutatorsline[:-1]
     file.write('\n' + resultline)
